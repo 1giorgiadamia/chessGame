@@ -28,10 +28,31 @@ def chess_game():
     game_state = chess_engine.GameState()
     init_images()
     running = True
+    square_selected = () # tracking the last click of the user (row, column)
+    player_clicks = [] # tracking player clicks, two tuples [(start_row, start_column), (end_row, end_column)]
     while running:
         for event in p.event.get():
             if event.type == p.QUIT:
                 running = False
+            elif event.type == p.MOUSEBUTTONDOWN:
+                location = p.mouse.get_pos() # (x, y) location of the mouse
+                column = location[0] // SQUARE_SIZE
+                row = location[1] // SQUARE_SIZE
+                if square_selected == (row, column):
+                    # deselecting
+                    square_selected = ()
+                    player_clicks = []
+                else:
+                    square_selected = (column, row)
+                    player_clicks.append(square_selected) # append for 1st and 2nd clicks
+                if len(player_clicks) == 2: # after 2nd click
+                    move = chess_engine.Move(player_clicks[0], player_clicks[1], game_state.board)
+                    print(move.get_chess_notation())
+                    game_state.make_move(move)
+                    # reset user clicks
+                    square_selected = ()
+                    player_clicks = []
+
         draw_game_state(screen, game_state)
         clock.tick(MAX_FPS)
         pygame.display.flip()
