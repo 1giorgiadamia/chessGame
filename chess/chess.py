@@ -25,16 +25,19 @@ def chess_game():
     clock = p.time.Clock()
     screen.fill(p.Color("White"))
     game_state = chess_engine.GameState()
+    valid_moves = game_state.get_valid_moves()
+    move_made = False
     init_images()
     running = True
-    square_selected = () # tracking the last click of the user (row, column)
-    player_clicks = [] # tracking player clicks, two tuples [(start_row, start_column), (end_row, end_column)]
+    square_selected = ()  # tracking the last click of the user (row, column)
+    player_clicks = []  # tracking player clicks, two tuples [(start_row, start_column), (end_row, end_column)]
+
     while running:
         for event in p.event.get():
             if event.type == p.QUIT:
                 running = False
             elif event.type == p.MOUSEBUTTONDOWN:
-                location = p.mouse.get_pos() # (x, y) location of the mouse
+                location = p.mouse.get_pos()  # (x, y) location of the mouse
                 column = location[0] // SQUARE_SIZE
                 row = location[1] // SQUARE_SIZE
                 if square_selected == (row, column):
@@ -43,14 +46,25 @@ def chess_game():
                     player_clicks = []
                 else:
                     square_selected = (row, column)
-                    player_clicks.append(square_selected) # append for 1st and 2nd clicks
-                if len(player_clicks) == 2: # after 2nd click
+                    player_clicks.append(square_selected)  # append for 1st and 2nd clicks
+                if len(player_clicks) == 2:  # after 2nd click
                     move = chess_engine.Move(player_clicks[0], player_clicks[1], game_state.board)
                     print(move.get_chess_notation())
-                    game_state.make_move(move)
+                    if move in valid_moves:
+                        game_state.make_move(move)
+                        move_made = True
                     # reset user clicks
                     square_selected = ()
                     player_clicks = []
+            elif event.type == p.KEYDOWN:
+                # undo when the 'z' is pressed
+                if event.key == p.K_z:
+                    game_state.undo_move()
+                    move_made = True
+
+        if move_made:
+            valid_moves = game_state.get_valid_moves()
+            move_made = False
 
         draw_game_state(screen, game_state)
         clock.tick(MAX_FPS)
@@ -65,7 +79,7 @@ def draw_game_state(screen, game_state):
 
 # Top left square is always white
 def draw_board(screen):
-    colors = [p.Color("White"), p.Color("Grey")]
+    colors = [p.Color("bisque"), p.Color("chocolate")]
     for row in range(DIMENSION):
         for column in range(DIMENSION):
             color = colors[((row + column) % 2)]
