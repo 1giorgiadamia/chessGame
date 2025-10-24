@@ -1,7 +1,6 @@
 """
 This class responsible for handling user input and displaying the current game state.
 """
-import pygame
 import pygame as p
 from chess import chess_engine
 
@@ -43,7 +42,7 @@ def chess_game():
                     square_selected = ()
                     player_clicks = []
                 else:
-                    square_selected = (column, row)
+                    square_selected = (row, column)
                     player_clicks.append(square_selected) # append for 1st and 2nd clicks
                 if len(player_clicks) == 2: # after 2nd click
                     move = chess_engine.Move(player_clicks[0], player_clicks[1], game_state.board)
@@ -55,7 +54,7 @@ def chess_game():
 
         draw_game_state(screen, game_state)
         clock.tick(MAX_FPS)
-        pygame.display.flip()
+        p.display.flip()
 
 
 # Responsible for all display on a current game state
