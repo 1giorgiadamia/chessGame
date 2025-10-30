@@ -128,10 +128,19 @@ class GameState:
                     break
 
     def get_queen_moves(self, row, column, moves):
-        pass
+        self.get_rook_moves(row, column, moves)
+        self.get_bishop_moves(row, column, moves)
 
     def get_king_moves(self, row, column, moves):
-        pass
+        king_moves = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+        ally_color = 'w' if self.white_to_move else 'b'
+        for i in range(8):
+            end_row = row + king_moves[i][0]
+            end_column = column + king_moves[i][1]
+            if LEFT_SIDE_OF_BOARD <= end_row <= RIGHT_SIDE_OF_BOARD and LEFT_SIDE_OF_BOARD <= end_column <= RIGHT_SIDE_OF_BOARD:
+                end_piece = self.board[end_row][end_column]
+                if end_piece[0] != ally_color:
+                    moves.append(Move((row, column), (end_row, end_column), self.board))
 
 
 class Move:
