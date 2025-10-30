@@ -17,7 +17,7 @@ class GameState:
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "bP", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
@@ -98,7 +98,15 @@ class GameState:
                     break
 
     def get_knight_moves(self, row, column, moves):
-        pass
+        knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
+        ally_color = 'w' if self.white_to_move else 'b'
+        for move in knight_moves:
+            end_row = row + move[0]
+            end_column = column + move[1]
+            if LEFT_SIDE_OF_BOARD <= end_row <= RIGHT_SIDE_OF_BOARD and LEFT_SIDE_OF_BOARD <= end_column <= RIGHT_SIDE_OF_BOARD:
+                end_piece = self.board[end_row][end_column]
+                if end_piece[0] != ally_color: # only enemy or empty square
+                    moves.append(Move((row, column), (end_row, end_column), self.board))
 
     def get_bishop_moves(self, row, column, moves):
         directions = ((-1, -1), (-1, 1), (1, -1), (1, 1)) # diagonal
