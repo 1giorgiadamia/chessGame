@@ -3,6 +3,9 @@ This class responsible for storing all the information about the current state o
 responsible for determining the valid moves at the current state. It will also log all the moves.
 """
 
+LEFT_SIDE_OF_BOARD = 0
+RIGHT_SIDE_OF_BOARD = 7
+
 
 class GameState:
     def __init__(self):
@@ -14,12 +17,14 @@ class GameState:
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "bP", "--", "--", "--", "--"],
             ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
         self.white_to_move = True
         self.move_log = []
+        self.move_functions = {'P': self.get_pawn_moves, 'R': self.get_rook_moves, 'N': self.get_knight_moves,
+                               'B': self.get_bishop_moves, 'Q': self.get_queen_moves, 'K': self.get_king_moves}
 
     def make_move(self, move):
         self.board[move.start_row][move.start_column] = "--"
@@ -43,18 +48,49 @@ class GameState:
         for row in range(len(self.board)):
             for column in range(len(self.board[row])):
                 turn = self.board[row][column][0]
-                if (turn == 'w' and self.white_to_move) and (turn == 'b' and not self.white_to_move):
+                if (turn == 'w' and self.white_to_move) or (turn == 'b' and not self.white_to_move):
                     piece = self.board[row][column][1]
-                    if piece == 'P':
-                        self.get_pawn_moves(row, column, moves)
-                    elif piece == 'R':
-                        self.get_rook_moves(row, column, moves)
+                    self.move_functions[piece](row, column, moves)
         return moves
 
     def get_pawn_moves(self, row, column, moves):
-        pass
+        # white pawn moves only on top, decrement rows
+        if self.white_to_move:
+            if self.board[row - 1][column] == '--': # nothing in front of the piece
+                moves.append(Move((row, column), (row - 1, column), self.board))
+                if row == 6 and self.board[row - 2][column] == '--': # first move
+                    moves.append(Move((row, column), (row - 2, column), self.board))
+            if column - 1 >= LEFT_SIDE_OF_BOARD: # to the left
+                if self.board[row - 1][column - 1][0] == 'b': # enemy piece to capture
+                    moves.append(Move((row, column), (row - 1, column - 1), self.board))
+            if column + 1 <= RIGHT_SIDE_OF_BOARD: # to the right
+                if self.board[row - 1][column + 1][0] == 'b':
+                    moves.append(Move((row, column), (row - 1, column + 1), self.board))
+        else:
+            if self.board[row + 1][column] == '--':
+                moves.append(Move((row, column), (row + 1, column), self.board))
+                if row == 1 and self.board[row + 2][column] == '--': # first move
+                    moves.append(Move((row, column), (row + 2, column), self.board))
+            if column - 1 >= LEFT_SIDE_OF_BOARD:  # to the left
+                if self.board[row + 1][column - 1][0] == 'w':  # enemy piece to capture
+                    moves.append(Move((row, column), (row + 1, column - 1), self.board))
+            if column + 1 <= RIGHT_SIDE_OF_BOARD:  # to the right
+                if self.board[row + 1][column + 1][0] == 'w':
+                    moves.append(Move((row, column), (row + 1, column + 1), self.board))
 
     def get_rook_moves(self, row, column, moves):
+        pass
+
+    def get_knight_moves(self, row, column, moves):
+        pass
+
+    def get_bishop_moves(self, row, column, moves):
+        pass
+
+    def get_queen_moves(self, row, column, moves):
+        pass
+
+    def get_king_moves(self, row, column, moves):
         pass
 
 
@@ -76,7 +112,7 @@ class Move:
         self.piece_moved = board[self.start_row][self.start_column]
         self.piece_captured = board[self.end_row][self.end_column]
         self.move_id = self.start_row * 1000 + self.start_column * 100 + self.end_row * 10 + self.end_column
-        print(self.move_id)
+        # print(self.move_id)
 
     # override equals
     def __eq__(self, other):
