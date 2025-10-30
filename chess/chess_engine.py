@@ -69,7 +69,7 @@ class GameState:
         else:
             if self.board[row + 1][column] == '--':
                 moves.append(Move((row, column), (row + 1, column), self.board))
-                if row == 1 and self.board[row + 2][column] == '--': # first move
+                if row == 1 and self.board[row + 2][column] == '--': # only for first move
                     moves.append(Move((row, column), (row + 2, column), self.board))
             if column - 1 >= LEFT_SIDE_OF_BOARD:  # to the left
                 if self.board[row + 1][column - 1][0] == 'w':  # enemy piece to capture
@@ -79,7 +79,23 @@ class GameState:
                     moves.append(Move((row, column), (row + 1, column + 1), self.board))
 
     def get_rook_moves(self, row, column, moves):
-        pass
+        directions = ((-1, 0), (0, -1), (1, 0), (0, 1)) # up, left, down, right possible directions for rook
+        enemy_color = 'b' if self.white_to_move else 'w'
+        for direction in directions:
+            for i in range(1, 8):
+                end_row = row + i * direction[0]
+                end_column = column + i * direction[1]
+                if LEFT_SIDE_OF_BOARD <= end_row <= RIGHT_SIDE_OF_BOARD and LEFT_SIDE_OF_BOARD <= end_column <= RIGHT_SIDE_OF_BOARD:
+                    end_piece = self.board[end_row][end_column]
+                    if end_piece == '--':
+                        moves.append(Move((row, column), (end_row, end_column), self.board))
+                    elif end_piece[0] == enemy_color:
+                        moves.append(Move((row, column), (end_row, end_column), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
 
     def get_knight_moves(self, row, column, moves):
         pass
