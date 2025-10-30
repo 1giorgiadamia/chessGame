@@ -101,7 +101,23 @@ class GameState:
         pass
 
     def get_bishop_moves(self, row, column, moves):
-        pass
+        directions = ((-1, -1), (-1, 1), (1, -1), (1, 1)) # diagonal
+        enemy_color = 'b' if self.white_to_move else 'w'
+        for direction in directions:
+            for i in range(1, 8): # bishop can move max 7 squares
+                end_row = row + i * direction[0]
+                end_column = column + i * direction[1]
+                if LEFT_SIDE_OF_BOARD <= end_row <= RIGHT_SIDE_OF_BOARD and LEFT_SIDE_OF_BOARD <= end_column <= RIGHT_SIDE_OF_BOARD:
+                    end_piece = self.board[end_row][end_column]
+                    if end_piece == '--':
+                        moves.append(Move((row, column), (end_row, end_column), self.board))
+                    elif end_piece[0] == enemy_color:
+                        moves.append(Move((row, column), (end_row, end_column), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
 
     def get_queen_moves(self, row, column, moves):
         pass
