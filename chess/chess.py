@@ -7,7 +7,7 @@ from chess import chess_engine
 WIDTH = HEIGHT = 512
 DIMENSION = 8  # 8x8 board
 SQUARE_SIZE = WIDTH // DIMENSION
-MAX_FPS = 15  # for amination
+MAX_FPS = 15  # for animation
 IMAGES = {}
 
 
@@ -50,9 +50,11 @@ def chess_game():
                 if len(player_clicks) == 2:  # after 2nd click
                     move = chess_engine.Move(player_clicks[0], player_clicks[1], game_state.board)
                     print(move.get_chess_notation())
-                    if move in valid_moves:
-                        game_state.make_move(move)
-                        move_made = True
+                    for valid_move in valid_moves:
+                        if move == valid_move:
+                            game_state.make_move(valid_move)  # Use the move from valid_moves, which has the flag set
+                            move_made = True
+                            break
                     # reset user clicks
                     square_selected = ()
                     player_clicks = []
