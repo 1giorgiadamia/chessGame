@@ -26,10 +26,17 @@ class GameState:
         self.en_passant_possible = ()
         self.move_functions = {'P': self.get_pawn_moves, 'R': self.get_rook_moves, 'N': self.get_knight_moves,
                                'B': self.get_bishop_moves, 'Q': self.get_queen_moves, 'K': self.get_king_moves}
+        self.white_king_location = (7, 4)
+        self.black_king_location = (0, 4)
 
     def make_move(self, move):
         self.board[move.start_row][move.start_column] = "--"
         self.board[move.end_row][move.end_column] = move.piece_moved
+
+        if move.piece_moved == 'wK':
+            self.white_king_location = (move.end_row, move.end_column)
+        elif move.piece_moved == 'bK':
+            self.black_king_location = (move.end_row, move.end_column)
 
         # Pawn Promotion
         if move.is_pawn_promotion:
@@ -70,6 +77,10 @@ class GameState:
                 self.en_passant_possible = ()
 
             self.white_to_move = not self.white_to_move
+            if move.piece_moved == 'wK':
+                self.white_king_location = (move.start_row, move.start_column)
+            elif move.piece_moved == 'bK':
+                self.black_king_location = (move.start_row, move.start_column)
 
     # moves considering checks
     def get_valid_moves(self):
@@ -78,6 +89,21 @@ class GameState:
 
         # Returns all moves for now
         moves = self.get_all_possible_moves()
+        for i in range(len(moves) - 1, -1, -1):
+            self.make_move(moves[i])
+            self.white_to_move = not self.white_to_move
+            if self.in_check():
+                moves.remove(moves[i])
+            self.white_to_move = not self.white_to_move
+            self.undo_move()
+        if len(moves) == 0: # checkmate/stalemate
+            if self.in_check():
+                self.checkmate = True
+            else:
+                self.stalemate = True
+        else:
+            self.checkmate = False
+            self.stalemate = False
 
         self.en_passant_possible = temp_en_passant_possible  # Restore the value
         return moves
@@ -188,6 +214,21 @@ class GameState:
                 end_piece = self.board[end_row][end_column]
                 if end_piece[0] != ally_color:
                     moves.append(Move((row, column), (end_row, end_column), self.board))
+
+    def in_check(self):
+        if self.white_to_move:
+            return self.square_under_attack(self.white_king_location[0], self.white_king_location[1])
+        else:
+            return self.square_under_attack(self.black_king_location[0], self.black_king_location[1])
+
+    def square_under_attack(self, row, column):
+        self.white_to_move = not self.white_to_move # get opponent moves
+        opponent_moves = self.get_all_possible_moves()
+        self.white_to_move = not self.white_to_move
+        for move in opponent_moves:
+            if move.end_row == row and move.end_column == column:
+                return True
+        return False
 
 
 class Move:
