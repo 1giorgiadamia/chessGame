@@ -3,6 +3,7 @@ This class responsible for handling user input and displaying the current game s
 """
 import pygame as p
 from chess import chess_engine
+from chess import chess_ai
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8  # 8x8 board
@@ -29,17 +30,24 @@ def chess_game():
     move_made = False
     init_images()
     running = True
+
+    player_one = True  # White player is human
+    player_two = False  # Black player is AI
+
     square_selected = ()  # tracking the last click of the user (row, column)
     player_clicks = []  # tracking player clicks, two tuples [(start_row, start_column), (end_row, end_column)]
     animate = False
     game_over = False
 
     while running:
+        human_turn = (game_state.white_to_move and player_one) or \
+                     (not game_state.white_to_move and player_two)
+
         for event in p.event.get():
             if event.type == p.QUIT:
                 running = False
             elif event.type == p.MOUSEBUTTONDOWN:
-                if not game_over:
+                if human_turn and not game_over:
                     location = p.mouse.get_pos()  # (x, y) location of the mouse
                     column = location[0] // SQUARE_SIZE
                     row = location[1] // SQUARE_SIZE
@@ -76,6 +84,15 @@ def chess_game():
                     player_clicks = []
                     move_made = False
                     animate = False
+             if not human_turn and not game_state.checkmate and not game_state.stalemate:
+                ai_move = chess_ai.find_best_move(game_state, valid_moves)
+
+                if ai_move is None:
+                    # If no move is found, it means the game is technically over, it's a safety check
+                    ai_move = chess_ai.find_random_move(valid_moves)
+                    print("AI could not find an optimal move. Makes a random move.")
+                game_state.make_move(ai_move)
+                move_made = True
 
         if move_made:
             if animate:
