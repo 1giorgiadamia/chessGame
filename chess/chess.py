@@ -84,15 +84,15 @@ def chess_game():
                     player_clicks = []
                     move_made = False
                     animate = False
-             if not human_turn and not game_state.checkmate and not game_state.stalemate:
-                ai_move = chess_ai.find_best_move(game_state, valid_moves)
+        if not human_turn and not game_state.checkmate and not game_state.stalemate:
+            ai_move = chess_ai.find_best_move(game_state, valid_moves)
 
-                if ai_move is None:
-                    # If no move is found, it means the game is technically over, it's a safety check
-                    ai_move = chess_ai.find_random_move(valid_moves)
-                    print("AI could not find an optimal move. Makes a random move.")
-                game_state.make_move(ai_move)
-                move_made = True
+            if ai_move is None:
+                # If no move is found, it means the game is technically over, it's a safety check
+                ai_move = chess_ai.find_random_move(valid_moves)
+                print("AI could not find an optimal move. Makes a random move.")
+            game_state.make_move(ai_move)
+            move_made = True
 
         if move_made:
             if animate:
