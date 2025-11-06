@@ -4,14 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="759ae73e-660e-4792-975e-9259dcf33f87" name="Changes" comment="Merge">
+    <list default="true" id="759ae73e-660e-4792-975e-9259dcf33f87" name="Changes" comment="Castling Done">
+      <change afterPath="$PROJECT_DIR$/chess/chess_ai.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chess/chess_engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess/chess_engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chess/chess.py" beforeDir="false" afterPath="$PROJECT_DIR$/chess/chess.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Merge.Settings">
     <option name="BRANCH" value="origin/master" />
@@ -19,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="castling" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -51,7 +59,7 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "RandomAI",
     "ignore.virus.scanning.warn.message": "true"
   }
 }]]></component>
@@ -155,12 +163,21 @@
       <option name="project" value="LOCAL" />
       <updated>1762085229115</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Castling Done">
+      <option name="closed" value="true" />
+      <created>1762346590439</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762346590439</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="En passant and pawn promotion" />
     <MESSAGE value="Merge" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge" />
+    <MESSAGE value="Castling Done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Castling Done" />
   </component>
 </project>
